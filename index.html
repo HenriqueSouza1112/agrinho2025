@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infraestrutura de Transporte | Cidade e Campo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Estilos gerais com tema escuro */
+        :root {
+            --background-color: #121212;
+            --card-background: #1e1e1e;
+            --accent-color: #3a86ff;
+            --accent-color-secondary: #ff9e00;
+            --text-color: #f5f5f5;
+            --text-color-secondary: #aaaaaa;
+            --border-color: #333333;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+            padding: var(--spacing-md) 0;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+        
+        /* Cabeçalho */
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .logo-icon {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: var(--spacing-lg);
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        nav a:hover {
+            color: var(--accent-color);
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        /* Seção Hero */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: var(--spacing-xl) 0;
+            background: linear-gradient(rgba(18, 18, 18, 0.8), rgba(18, 18, 18, 0.9)), url('https://images.unsplash.com/photo-1494522855154-9297ac14b55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            min-height: 80vh;
+        }
+        
+        .hero h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-color-secondary);
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2a75e6;
+            transform: translateY(-3px);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 2px solid var(--accent-color-secondary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255, 158, 0, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        /* Seções gerais */
+        section {
+            padding: var(--spacing-xl) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .section-header h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .section-header p {
+            color: var(--text-color-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .divider {
+            height: 4px;
+            width: 60px;
+            background: linear-gradient(to right, var(--accent-color), var(--accent-color-secondary));
+            margin: var(--spacing-md) auto;
+            border-radius: 2px;
+        }
+        
+        /* Cards grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+        
+        .card {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--accent-color);
+            display: inline-block;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .card-text {
+            color: var(--text-color-secondary);
+        }
+        
+        /* Seção de comparação */
+        .comparison {
+            background-color: var(--card-background);
+        }
+        
+        .comparison-content {
+            display: flex;
+            gap: var(--spacing-xl);
+        }
+        
+        .comparison-column {
+            flex: 1;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius);
+            background-color: var(--background-color);
+        }
+        
+        .comparison-column h3 {
+            font-size: 1.75rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--accent-color);
+        }
+        
+        .comparison-column h3 i {
+            margin-right: var(--spacing-sm);
+        }
+        
+        .comparison-list {
+            list-style: none;
+        }
+        
+        .comparison-list li {
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .comparison-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .comparison-list i {
+            color: var(--accent-color);
+        }
+        
+        /* Seção de estatísticas */
+        .stats {
+            background: linear-gradient(rgba(18, 18, 18, 0.9), rgba(18, 18, 18, 0.9)), url('https://images.unsplash.com/photo-1563427545996-7f7856ec0e3d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: var(--spacing-lg);
+            background-color: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+            color: var(--accent-color);
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-color-secondary);
+        }
+        
+        /* Seção de desafios */
+        .challenges-content {
+            display: flex;
+            gap: var(--spacing-xl);
+            align-items: center;
+        }
+        
+        .challenges-text {
+            flex: 1;
+        }
+        
+        .challenges-text h3 {
+            font-size: 1.75rem;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .challenges-text p {
+            margin-bottom: var(--spacing-md);
+            color: var(--text-color-secondary);
+        }
+        
+        .challenges-image {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .challenges-image img {
+            max-width: 100%;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        /* Seção de casos */
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+        
+        .case-card {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .case-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .case-image {
+            height: 200px;
+            width: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .case-content {
+            padding: var(--spacing-lg);
+        }
+        
+        .case-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .case-content p {
+            color: var(--text-color-secondary);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .case-link {
+            display: inline-block;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .case-link:hover {
+            color: var(--accent-color-secondary);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--card-background);
+            padding: var(--spacing-xl) 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .footer-column h3 {
+            font-size: 1.25rem;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .footer-links a {
+            text-decoration: none;
+            color: var(--text-color-secondary);
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(58, 134, 255, 0.1);
+            color: var(--accent-color);
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--accent-color);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--border-color);
+            color: var(--text-color-secondary);
+            font-size: 0.875rem;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 991px) {
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+            
+            .comparison-content {
+                flex-direction: column;
+            }
+            
+            .challenges-content {
+                flex-direction: column;
+            }
+            
+            .challenges-image {
+                order: -1;
+                margin-bottom: var(--spacing-lg);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: var(--spacing-md);
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero h2 {
+                font-size: 1.75rem;
+            }
+            
+            .section-header h2 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-road logo-icon"></i>
+                    <h1>ConectaVias</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#inicio">Início</a></li>
+                        <li><a href="#importancia">Importância</a></li>
+                        <li><a href="#cidade-campo">Cidade e Campo</a></li>
+                        <li><a href="#desafios">Desafios</a></li>
+                        <li><a href="#casos">Casos de Sucesso</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section id="inicio" class="hero">
+        <div class="container">
+          <center> <h2>Infraestrutura de Transporte</h2>
+            <p>Conectando pessoas, fortalecendo economias e transformando a relação entre cidades e áreas rurais através de sistemas de transporte eficientes e sustentáveis.</p></center
+            <div class="hero-buttons">
+                <a href="#importancia" class="btn btn-primary">Descubra a importância</a>
+                <a href="#cidade-campo" class="btn btn-secondary">Cidade e Campo</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="importancia">
+        <div class="container">
+            <div class="section-header">
+                <h2>A Importância da Infraestrutura de Transporte</h2>
+                <div class="divider"></div>
+                <p>A infraestrutura de transporte é o alicerce do desenvolvimento econômico e social, permitindo a mobilidade de pessoas e mercadorias de forma eficiente.</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <i class="fas fa-chart-line card-icon"></i>
+                    <h3 class="card-title">Desenvolvimento Econômico</h3>
+                    <p class="card-text">Reduz custos logísticos, amplia mercados e facilita o comércio, estimulando o crescimento econômico e a criação de empregos.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-users card-icon"></i>
+                    <h3 class="card-title">Acesso a Serviços</h3>
+                    <p class="card-text">Promove o acesso a serviços essenciais como educação, saúde e lazer, melhorando a qualidade de vida da população.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-leaf card-icon"></i>
+                    <h3 class="card-title">Sustentabilidade</h3>
+                    <p class="card-text">Sistemas de transporte bem planejados podem reduzir emissões, congestionamentos e uso de recursos naturais.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-globe card-icon"></i>
+                    <h3 class="card-title">Integração Territorial</h3>
+                    <p class="card-text">Conecta diferentes regiões, reduzindo desigualdades e promovendo o desenvolvimento equilibrado do território.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="cidade-campo" class="comparison">
+        <div class="container">
+            <div class="section-header">
+                <h2>A Relação Cidade e Campo</h2>
+                <div class="divider"></div>
+                <p>A infraestrutura de transporte é crucial para estabelecer conexões eficientes entre áreas urbanas e rurais, gerando benefícios mútuos.</p>
+            </div>
+
+            <div class="comparison-content">
+                <div class="comparison-column">
+                    <h3><i class="fas fa-city"></i> Cidades</h3>
+                    <ul class="comparison-list">
+                        <li><i class="fas fa-check-circle"></i> Recebem alimentos e matérias-primas do campo</li>
+                        <li><i class="fas fa-check-circle"></i> Oferecem serviços especializados para áreas rurais</li>
+                        <li><i class="fas fa-check-circle"></i> Fornecem mercado consumidor para produtos rurais</li>
+                        <li><i class="fas fa-check-circle"></i> Aliviam congestionamentos com boas conexões</li>
+                        <li><i class="fas fa-check-circle"></i> Reduzem poluição com transporte público eficiente</li>
+                        <li><i class="fas fa-check-circle"></i> Melhoram mobilidade urbana com integração multimodal</li>
+                    </ul>
+                </div>
+                <div class="comparison-column">
+                    <h3><i class="fas fa-tractor"></i> Campo</h3>
+                    <ul class="comparison-list">
+                        <li><i class="fas fa-check-circle"></i> Escoamento eficiente da produção agrícola</li>
+                        <li><i class="fas fa-check-circle"></i> Acesso a mercados mais amplos e melhores preços</li>
+                        <li><i class="fas fa-check-circle"></i> Redução do isolamento e êxodo rural</li>
+                        <li><i class="fas fa-check-circle"></i> Acesso facilitado a educação e saúde</li>
+                        <li><i class="fas fa-check-circle"></i> Valorização de terras e propriedades rurais</li>
+                        <li><i class="fas fa-check-circle"></i> Desenvolvimento do turismo rural</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="container">
+            <div class="section-header">
+                <h2>Impacto em Números</h2>
+                <div class="divider"></div>
+                <p>Dados que mostram a relevância da infraestrutura de transporte para o desenvolvimento econômico e social.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">25%</div>
+                    <div class="stat-label">Redução média no custo de transporte após melhorias na infraestrutura</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">40%</div>
+                    <div class="stat-label">Aumento na produtividade agrícola com acesso a melhores estradas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">60%</div>
+                    <div class="stat-label">Da população rural brasileira enfrenta limitações de acesso a transporte</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2.5x</div>
+                    <div class="stat-label">Aumento no valor de propriedades com melhor acesso a transporte</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="desafios" class="challenges">
+        <div class="container">
+            <div class="section-header">
+                <h2>Desafios e Soluções</h2>
+                <div class="divider"></div>
+                <p>A infraestrutura de transporte enfrenta diversos desafios que exigem soluções inovadoras e sustentáveis.</p>
+            </div>
+
+            <div class="challenges-content">
+                <div class="challenges-text">
+                    <h3>Principais Desafios</h3>
+                    <p>O financiamento insuficiente, manutenção precária e planejamento inadequado são alguns dos principais obstáculos para o desenvolvimento de uma infraestrutura de transporte eficiente no Brasil.</p>
+                    <p>Além disso, questões ambientais, desigualdades territoriais e a adaptação às novas tecnologias representam desafios significativos que precisam ser enfrentados com políticas públicas eficazes e participação da sociedade.</p>
+                    <h3>Soluções Emergentes</h3>
+                    <p>Novas formas de financiamento, como parcerias público-privadas, uso de tecnologias para otimização de recursos, planejamento integrado e participativo, e o desenvolvimento de sistemas multimodais são algumas das soluções em implementação.</p>
+                    <p>A transição para sistemas mais sustentáveis, com menor impacto ambiental e maior eficiência energética, representa uma tendência global que também está sendo adotada no Brasil.</p>
+                </div>
+                <div class="challenges-image">
+                    <svg width="400" height="300" viewBox="0 0 400 300">
+                        <!-- Fundo representando mapa -->
+                        <rect x="0" y="0" width="400" height="300" fill="#1e1e1e" rx="8" ry="8" />
+                        
+                        <!-- Terreno urbano -->
+                        <rect x="20" y="20" width="160" height="120" fill="#252525" rx="5" ry="5" />
+                        <!-- Edifícios urbanos -->
+                        <rect x="40" y="40" width="20" height="40" fill="#3a86ff" />
+                        <rect x="70" y="30" width="25" height="50" fill="#3a86ff" />
+                        <rect x="105" y="45" width="15" height="35" fill="#3a86ff" />
+                        <rect x="130" y="25" width="30" height="55" fill="#3a86ff" />
+                        
+                        <!-- Vias urbanas -->
+                        <line x1="35" y1="100" x2="165" y2="100" stroke="#aaaaaa" stroke-width="3" />
+                        <line x1="100" y1="30" x2="100" y2="130" stroke="#aaaaaa" stroke-width="3" />
+                        
+                        <!-- Terreno rural -->
+                        <rect x="220" y="20" width="160" height="120" fill="#252525" rx="5" ry="5" />
+                        <!-- Campos rurais -->
+                        <rect x="240" y="40" width="50" height="30" fill="#437f35" opacity="0.7" />
+                        <rect x="240" y="80" width="50" height="30" fill="#5c9142" opacity="0.7" />
+                        <rect x="300" y="40" width="60" height="70" fill="#6fa055" opacity="0.7" />
+                        
+                        <!-- Estrada conectando urbano e rural -->
+                        <path d="M180 80 C200 80, 200 80, 220 80" stroke="#aaaaaa" stroke-width="5" stroke-linecap="round" />
+                        
+                        <!-- Estrada principal conectando tudo -->
+                        <path d="M20 180 C100 160, 300 200, 380 170" stroke="#ff9e00" stroke-width="8" stroke-linecap="round" stroke-dasharray="1, 0" />
+                        
+                        <!-- Pontos de conexão -->
+                        <circle cx="100" cy="175" r="8" fill="#3a86ff" />
+                        <circle cx="200" cy="185" r="8" fill="#3a86ff" />
+                        <circle cx="300" cy="180" r="8" fill="#3a86ff" />
+                        
+                        <!-- Caminhos secundários -->
+                        <path d="M100 175 L100 100" stroke="#aaaaaa" stroke-width="2" stroke-dasharray="5,3" />
+                        <path d="M300 180 L300 90" stroke="#aaaaaa" stroke-width="2" stroke-dasharray="5,3" />
+                        
+                        <!-- Legenda -->
+                        <circle cx="50" cy="230" r="5" fill="#3a86ff" />
+                        <text x="65" y="235" fill="#aaaaaa" font-size="12">Centros de distribuição</text>
+                        
+                        <line x1="50" y1="250" x2="60" y2="250" stroke="#ff9e00" stroke-width="4" />
+                        <text x="65" y="255" fill="#aaaaaa" font-size="12">Corredor logístico</text>
+                        
+                        <line x1="50" y1="270" x2="60" y2="270" stroke="#aaaaaa" stroke-width="2" stroke-dasharray="5,3" />
+                        <text x="65" y="275" fill="#aaaaaa" font-size="12">Conexões secundárias</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="casos" class="success-cases">
+        <div class="container">
+            <div class="section-header">
+                <h2>Casos de Sucesso</h2>
+                <div class="divider"></div>
+                <p>Exemplos de projetos bem-sucedidos que demonstram o impacto positivo da infraestrutura de transporte na conexão entre cidade e campo.</p>
+            </div>
+
+            <div class="cases-grid">
+                <div class="case-card">
+                    <div class="case-image" style="background-image: url('https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="case-content">
+                        <h3>Corredor Norte-Sul</h3>
+                        <p>A ferrovia Norte-Sul conecta regiões produtoras agrícolas do centro-oeste a portos nas regiões Norte e Sudeste, reduzindo custos logísticos e impulsionando o desenvolvimento regional.</p>
+                        <a href="#" class="case-link">Saiba mais <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="case-card">
+                    <div class="case-image" style="background-image: url('https://images.unsplash.com/photo-1532054042869-c409cdfd5d3c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="case-content">
+                        <h3>Programa Caminhos da Escola</h3>
+                        <p>Iniciativa que melhora o acesso à educação em áreas rurais através do transporte escolar adequado, reduzindo a evasão escolar e melhorando a qualidade de vida.</p>
+                        <a href="#" class="case-link">Saiba mais <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="case-card">
+                    <div class="case-image" style="background-image: url('https://images.unsplash.com/photo-1517737812598-1a43d0ef2a13?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="case-content">
+                        <h3>Integração Multimodal</h3>
+                        <p>Sistema que integra diferentes modos de transporte (rodovias, ferrovias e hidrovias) na região metropolitana de São Paulo, facilitando o acesso de produtos agrícolas aos mercados urbanos.</p>
+                        <a href="#" class="case-link">Saiba mais <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>ConectaVias</h3>
+                    <p>Um portal educacional dedicado a explorar a importância da infraestrutura de transporte na conexão entre cidades e áreas rurais.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Links Rápidos</h3>
+                    <ul class="footer-links">
+                        <li><a href="#inicio">Início</a></li>
+                        <li><a href="#importancia">Importância</a></li>
+                        <li><a href="#cidade-campo">Cidade e Campo</a></li>
+                        <li><a href="#desafios">Desafios</a></li>
+                        <li><a href="#casos">Casos de Sucesso</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Recursos</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Artigos</a></li>
+                        <li><a href="#">Estudos de Caso</a></li>
+                        <li><a href="#">Infográficos</a></li>
+                        <li><a href="#">Vídeos</a></li>
+                        <li><a href="#">Bibliografia</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contato</h3>
+                    <p>contato@conectavias.edu.br</p>
+                    <p>Tel: (41) 9999-9999</p>
+                    <p>Curitica, Paraná, Brasil</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 ConectaVias | Portal Educacional. Colegio Padre Claudio Morelli - Projeto agrinho</p>
+                <p>Feito por Henrique.</p> <img src="image.png" alt="" width="100">
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
